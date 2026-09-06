@@ -1,6 +1,51 @@
 const std = @import("std");
 const print = std.debug.print;
-const options = [_][]const u8{ "Add", "Remove", "Update", "Exit" };
+const options = [_][]const u8{
+    "Add",
+    "Remove",
+    "Update",
+    "List All",
+    "Exit"
+};
+
+const goals = [_][]const u8{
+    "Meditation",
+    "Thinking In Systems",
+    "Computer Systems",
+    "Network Programming In C",
+    "Introduction to Algorithms",
+    "AI Engineering",
+    "Course of Action",
+    "Bycle",
+    "Design Data Intensive Application",
+};
+
+const headers = [_][]const u8{
+    "Goal/Task",
+    "Priority Type",
+    "Current Page",
+    "Time Spent Today",
+    "Last Date Worked",
+    "Days Since Last",
+    "Day Started",
+};
+
+fn add_task() !void {
+    print("Adding task...\n", .{});
+}
+
+fn list_all_task() !void {
+    print("List all tasks...\n", .{});
+    for (headers) |header| {
+        print("{s} | ", .{header});
+    }
+
+    print("\n", .{});
+
+    for (goals) |goal| {
+        print("{s} | \n", .{goal});
+    }
+}
 
 pub fn main(init: std.process.Init) !void {
     print("Welcome Erick to Course of Action\n\n", .{});
@@ -32,10 +77,11 @@ pub fn main(init: std.process.Init) !void {
             };
 
             switch (number) {
-                1 => print("Adding task...\n", .{}),
+                1 => try add_task(),
                 2 => print("Removing task...\n", .{}),
                 3 => print("Updating task...\n", .{}),
-                4 => boolean = false,
+                4 => try list_all_task(),
+                5 => boolean = false,
                 else => print("Unexpected number try again\n", .{}),
             }
         }
