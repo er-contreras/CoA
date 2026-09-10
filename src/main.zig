@@ -3,44 +3,57 @@ const print = std.debug.print;
 
 const options = [_][]const u8{ "Add", "Remove", "Update", "Exit" };
 
-const goals = [_][]const u8{
-    "Meditation",
-    "Thinking In Systems",
-    "Computer Systems",
-    "Network Programming In C",
-    "Introduction to Algorithms",
-    "AI Engineering",
-    "Course of Action",
-    "Bycle",
-    "Design Data Intensive Application",
-};
-
-const headers = [_][]const u8{
-    "Goal/Task",
-    "Priority Type",
-    "Current Page",
-    "Time Spent Today",
-    "Last Date Worked",
-    "Days Since Last",
-    "Day Started",
-};
-
-fn add_task() !void {
-    print("Adding task...\n", .{});
+fn createGoal(
+    goal: []const u8,
+    priority_type: []const u8,
+    current_page: []const u8,
+    time_spent_today: []const u8,
+    last_date_worked: []const u8,
+    days_since_last: []const u8,
+    day_started: []const u8,
+) struct {
+    goal: []const u8,
+    priority_type: []const u8,
+    current_page: []const u8,
+    time_spent_today: []const u8,
+    last_date_worked: []const u8,
+    days_since_last: []const u8,
+    day_started: []const u8,
+} {
+    return .{
+        .goal = goal,
+        .priority_type = priority_type,
+        .current_page = current_page,
+        .time_spent_today = time_spent_today,
+        .last_date_worked = last_date_worked,
+        .days_since_last = days_since_last,
+        .day_started = day_started,
+    };
 }
 
 fn list_all_task() void {
     print("\n", .{});
 
-    for (headers) |header| {
-        print("\x1b[30;47m{s}\x1b[0m | ", .{header});
+    const goals = .{
+        createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+        createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    };
+
+    inline for (goals) |goal| {
+        print(
+            "\x1b[31mGoal\x1b[0m: {s}\n | Priority Type: {s}\n | Current Page: {s}\n | Time Spent Today: {s}\n | Last Day Worked: {s}\n | Days Since Last: {s}\n | Day Started: {s}\n",
+            .{goal.goal, goal.priority_type, goal.current_page, goal.time_spent_today, goal.last_date_worked, goal.days_since_last, goal.day_started}
+            );
     }
 
-    print("\n", .{});
-
-    for (goals) |goal| {
-        print("{s} | \n", .{goal});
-    }
 }
 
 pub fn main(init: std.process.Init) !void {
@@ -75,7 +88,7 @@ pub fn main(init: std.process.Init) !void {
             };
 
             switch (number) {
-                1 => try add_task(),
+                1 => print("Adding task...\n", .{}),
                 2 => print("Removing task...\n", .{}),
                 3 => print("Updating task...\n", .{}),
                 4 => boolean = false,
