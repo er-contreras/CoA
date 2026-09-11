@@ -3,6 +3,16 @@ const print = std.debug.print;
 
 const options = [_][]const u8{ "Add", "Remove", "Update", "Exit" };
 
+const Goal = struct {
+    goal: []const u8,
+    priority_type: []const u8,
+    current_page: []const u8,
+    time_spent_today: []const u8,
+    last_date_worked: []const u8,
+    days_since_last: []const u8,
+    day_started: []const u8,
+};
+
 fn createGoal(
     goal: []const u8,
     priority_type: []const u8,
@@ -11,15 +21,7 @@ fn createGoal(
     last_date_worked: []const u8,
     days_since_last: []const u8,
     day_started: []const u8,
-) struct {
-    goal: []const u8,
-    priority_type: []const u8,
-    current_page: []const u8,
-    time_spent_today: []const u8,
-    last_date_worked: []const u8,
-    days_since_last: []const u8,
-    day_started: []const u8,
-} {
+) Goal {
     return .{
         .goal = goal,
         .priority_type = priority_type,
@@ -31,7 +33,20 @@ fn createGoal(
     };
 }
 
-fn list_all_task() void {
+const goals = [_]Goal{
+    createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+};
+
+fn printGoalCards() void {
     print("\n", .{});
 
     const goals = .{
@@ -66,14 +81,14 @@ pub fn main(init: std.process.Init) !void {
 
     var boolean = true;
     while (boolean) {
-        print("Choose an option\n", .{});
+        print("\x1b[36mChoose an option\x1b[0m\n", .{});
         for (options, 0..) |option, i| {
             print("{d}. {s} a task | ", .{ i + 1, option });
         }
 
         print("\n", .{});
 
-        list_all_task();
+        printGoalCards();
 
         if (try reader.takeDelimiter('\n')) |line| {
             const number: u8 = std.fmt.parseInt(u8, line, 10) catch |err| switch (err) {
