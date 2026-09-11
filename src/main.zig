@@ -49,26 +49,71 @@ const goals = [_]Goal{
 fn printGoalCards() void {
     print("\n", .{});
 
-    const goals = .{
-        createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-        createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    };
+    const cards_per_row = 3;
+    var i: usize = 0;
+    while (i < goals.len) : (i += cards_per_row) {
+        const end = @min(i + cards_per_row, goals.len);
+        const chunk = goals[i..end];
 
-    inline for (goals) |goal| {
-        print(
-            "\x1b[31mGoal\x1b[0m: {s}\n | Priority Type: {s}\n | Current Page: {s}\n | Time Spent Today: {s}\n | Last Day Worked: {s}\n | Days Since Last: {s}\n | Day Started: {s}\n",
-            .{goal.goal, goal.priority_type, goal.current_page, goal.time_spent_today, goal.last_date_worked, goal.days_since_last, goal.day_started}
-            );
+        for (chunk) |_| {
+            print("┌──────────────────────────────────┐  ", .{});
+        }
+        print("\n", .{});
+
+        for (chunk) |g| {
+            const truncated = truncate(g.goal, 26);
+            print("│ \x1b[31mGoal:\x1b[0m {s:<26} │ ", .{truncated});
+        }
+        print("\n", .{});
+
+        for (chunk) |_| {
+            print("├──────────────────────────────────┤  ", .{});
+        }
+        print("\n", .{});
+
+        for (chunk) |g| {
+            print("│ Priority: {s:<22} │  ", .{g.priority_type});
+        }
+        print("\n", .{});
+
+        for (chunk) |g| {
+            print("│ Page: {s:<26} │  ", .{g.current_page});
+        }
+        print("\n", .{});
+
+        for (chunk) |g| {
+            print("│ Time Today: {s:<20} │  ", .{g.time_spent_today});
+        }
+        print("\n", .{});
+
+        for (chunk) |g| {
+            print("│ Last Worked: {s:<19} │  ", .{g.last_date_worked});
+        }
+        print("\n", .{});
+        
+        for (chunk) |g| {
+            print("│ Days Since Last: {s:<15} │  ", .{g.days_since_last});
+        }
+        print("\n", .{});
+
+        for (chunk) |g| {
+            print("│ Day Started: {s:<20} │  ", .{g.day_started});
+        }
+        print("\n", .{});
+
+        for (chunk) |_| {
+            print("└──────────────────────────────────┘  ", .{});
+        }
+        print("\n", .{});
     }
+}
 
+fn truncate(s: []const u8, max_len: usize) []const u8 {
+    if (s.len > max_len) {
+        return s[0..max_len];
+    } else {
+        return s;
+    }
 }
 
 pub fn main(init: std.process.Init) !void {
