@@ -66,46 +66,51 @@ fn printGoalCards() void {
         }
         print("\n", .{});
 
-        for (chunk) |_| {
-            print("├──────────────────────────────────┤  ", .{});
-        }
-        print("\n", .{});
+fn printGoals() void {
+    print("\n", .{});
 
-        for (chunk) |g| {
-            print("│ Priority: {s:<22} │  ", .{g.priority_type});
-        }
-        print("\n", .{});
+    const goal = "\x1b[31mGoals:\x1b[0m";
+    print("{s}", .{goal});
 
-        for (chunk) |g| {
-            print("│ Page: {s:<26} │  ", .{g.current_page});
-        }
-        print("\n", .{});
+    const priority = "\x1b[31mPriority Type:\x1b[0m";
+    print("{s: >45}", .{priority});
 
-        for (chunk) |g| {
-            print("│ Time Today: {s:<20} │  ", .{g.time_spent_today});
-        }
-        print("\n", .{});
+    const current_page = "\x1b[31mCurrent Page:\x1b[0m";
+    print("{s: >35}", .{current_page});
 
-        for (chunk) |g| {
-            print("│ Last Worked: {s:<19} │  ", .{g.last_date_worked});
-        }
-        print("\n", .{});
-        
-        for (chunk) |g| {
-            print("│ Days Since Last: {s:<15} │  ", .{g.days_since_last});
-        }
-        print("\n", .{});
+    const time_spent_today = "\x1b[31mCurrent Page:\x1b[0m";
+    print("{s: >35}", .{time_spent_today});
 
-        for (chunk) |g| {
-            print("│ Day Started: {s:<20} │  ", .{g.day_started});
-        }
-        print("\n", .{});
+    const last_date_worked = "\x1b[31mLast Day Worked\x1b[0m";
+    print("{s: >35}", .{last_date_worked});
 
-        for (chunk) |_| {
-            print("└──────────────────────────────────┘  ", .{});
-        }
+    const days_since_last = "\x1b[31mDays Since Last\x1b[0m";
+    print("{s: >35}", .{days_since_last});
+
+    const day_started = "\x1b[31mDay Started\x1b[0m";
+    print("{s: >35}", .{day_started});
+
+    print("\n", .{});
+
+    for (goals) |g| {
+        const goal_truncated = truncate(g.goal, 25);
+        const priority_truncated = g.priority_type;
+        const current_pg = g.current_page;
+        const time_spent = g.time_spent_today;
+        const last_date = g.last_date_worked;
+        const days_since = g.days_since_last;
+        const day_start = g.day_started;
+
+        print("{s: <30}", .{goal_truncated});
+        print("{s: <30}", .{priority_truncated});
+        print("{s: <25}", .{current_pg});
+        print("{s: <25}", .{time_spent});
+        print("{s: <25}", .{last_date});
+        print("{s: <25}", .{days_since});
+        print("{s: <25}", .{day_start});
         print("\n", .{});
     }
+
 }
 
 fn truncate(s: []const u8, max_len: usize) []const u8 {
@@ -133,7 +138,7 @@ pub fn main(init: std.process.Init) !void {
 
         print("\n", .{});
 
-        printGoalCards();
+        printGoals();
 
         if (try reader.takeDelimiter('\n')) |line| {
             const number: u8 = std.fmt.parseInt(u8, line, 10) catch |err| switch (err) {
