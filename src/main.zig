@@ -11,6 +11,7 @@ const Goal = struct {
     last_date_worked: []const u8,
     days_since_last: []const u8,
     day_started: []const u8,
+    status_bar: []const u8,
 };
 
 fn createGoal(
@@ -21,6 +22,7 @@ fn createGoal(
     last_date_worked: []const u8,
     days_since_last: []const u8,
     day_started: []const u8,
+    status_bar: []const u8,
 ) Goal {
     return .{
         .goal = goal,
@@ -30,41 +32,35 @@ fn createGoal(
         .last_date_worked = last_date_worked,
         .days_since_last = days_since_last,
         .day_started = day_started,
+        .status_bar = status_bar,
     };
 }
 
 const goals = [_]Goal{
-    createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
-    createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026"),
+    createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
 };
 
-fn printGoalCards() void {
-    print("\n", .{});
+fn getTerminalWidth() u16 {
+    var ws: std.posix.winsize = undefined;
+    const stdout_fd = std.Io.File.stdout().handle;
 
-    const cards_per_row = 3;
-    var i: usize = 0;
-    while (i < goals.len) : (i += cards_per_row) {
-        const end = @min(i + cards_per_row, goals.len);
-        const chunk = goals[i..end];
+    const err = std.posix.system.ioctl(stdout_fd, std.posix.T.IOCGWINSZ, @intFromPtr(&ws));
 
-        for (chunk) |_| {
-            print("┌──────────────────────────────────┐  ", .{});
-        }
-        print("\n", .{});
+    if (err == 0 and ws.col > 0) {
+        return ws.col;
+    }
 
-        for (chunk) |g| {
-            const truncated = truncate(g.goal, 26);
-            print("│ \x1b[31mGoal:\x1b[0m {s:<26} │ ", .{truncated});
-        }
-        print("\n", .{});
+    return 80;
+}
 
 fn printGoals() void {
     print("\n", .{});
@@ -90,6 +86,9 @@ fn printGoals() void {
     const day_started = "\x1b[31mDay Started\x1b[0m";
     print("{s: >35}", .{day_started});
 
+    const status_bar = "\x1b[31mStatus Bar\x1b[0m";
+    print("{s: >35}", .{status_bar});
+
     print("\n", .{});
 
     for (goals) |g| {
@@ -100,6 +99,7 @@ fn printGoals() void {
         const last_date = g.last_date_worked;
         const days_since = g.days_since_last;
         const day_start = g.day_started;
+        const stus_bar = g.status_bar;
 
         print("{s: <30}", .{goal_truncated});
         print("{s: <30}", .{priority_truncated});
@@ -108,6 +108,7 @@ fn printGoals() void {
         print("{s: <25}", .{last_date});
         print("{s: <25}", .{days_since});
         print("{s: <25}", .{day_start});
+        print("{s: <25}", .{stus_bar});
         print("\n", .{});
     }
 
@@ -122,7 +123,8 @@ fn truncate(s: []const u8, max_len: usize) []const u8 {
 }
 
 pub fn main(init: std.process.Init) !void {
-    print("Welcome Erick to Course of Action\n\n", .{});
+    print("Welcome Erick to Course of Action\n", .{});
+    print("{s}\n", .{std.posix.uname().machine});
 
     const stdin_file = std.Io.File.stdin();
     var input_buffer: [1024]u8 = undefined;
