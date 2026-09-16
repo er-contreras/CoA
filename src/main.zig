@@ -37,16 +37,16 @@ fn createGoal(
 }
 
 const goals = [_]Goal{
-    createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
-    createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "=========="),
+    createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
+    createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[43m           \x1b[0m"),
+    createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[41m           \x1b[0m"),
+    createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
+    createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
+    createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
+    createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[43m           \x1b[0m"),
+    createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[41m           \x1b[0m"),
+    createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
+    createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
 };
 
 fn getTerminalWidth() u16 {
