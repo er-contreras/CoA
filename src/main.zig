@@ -118,6 +118,7 @@ pub fn main(init: std.process.Init) !void {
     var boolean = true;
     while (boolean) {
         print("\x1b[36mChoose an option\x1b[0m\n", .{});
+        print("\x1b[2J\x1b[H", .{});
         for (options, 0..) |option, i| {
             print("{d}. {s} a task | ", .{ i + 1, option });
         }
