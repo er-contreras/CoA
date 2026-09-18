@@ -107,9 +107,6 @@ fn truncate(s: []const u8, max_len: usize) []const u8 {
 }
 
 pub fn main(init: std.process.Init) !void {
-    print("Welcome Erick to Course of Action\n", .{});
-    print("{s}\n", .{std.posix.uname().machine});
-
     const stdin_file = std.Io.File.stdin();
     var input_buffer: [1024]u8 = undefined;
     var file_reader = stdin_file.reader(init.io, &input_buffer);
@@ -117,8 +114,11 @@ pub fn main(init: std.process.Init) !void {
 
     var boolean = true;
     while (boolean) {
-        print("\x1b[36mChoose an option\x1b[0m\n", .{});
         print("\x1b[2J\x1b[H", .{});
+        print("\x1b[?1049h", .{});
+        print("Welcome Erick to Course of Action\n", .{});
+        print("\x1b[36mChoose an option\x1b[0m\n", .{});
+        print("{s}\n", .{std.posix.uname().machine});
         for (options, 0..) |option, i| {
             print("{d}. {s} a task | ", .{ i + 1, option });
         }
