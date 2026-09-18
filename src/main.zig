@@ -66,7 +66,7 @@ fn printGoals() void {
     print("\n", .{});
 
     print(
-        "\x1b[31m{s: <10}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}\x1b[0m",
+        "\x1b[31m\x1b[1m\x1b[4m{s: <10}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}\x1b\x1b\x1b[0m",
         .{
             "Goals:",
             "Priority Type:",
