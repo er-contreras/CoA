@@ -65,53 +65,37 @@ fn getTerminalWidth() u16 {
 fn printGoals() void {
     print("\n", .{});
 
-    const goal = "\x1b[31mGoals:\x1b[0m";
-    print("{s}", .{goal});
-
-    const priority = "\x1b[31mPriority Type:\x1b[0m";
-    print("{s: >45}", .{priority});
-
-    const current_page = "\x1b[31mCurrent Page:\x1b[0m";
-    print("{s: >35}", .{current_page});
-
-    const time_spent_today = "\x1b[31mCurrent Page:\x1b[0m";
-    print("{s: >35}", .{time_spent_today});
-
-    const last_date_worked = "\x1b[31mLast Day Worked\x1b[0m";
-    print("{s: >35}", .{last_date_worked});
-
-    const days_since_last = "\x1b[31mDays Since Last\x1b[0m";
-    print("{s: >35}", .{days_since_last});
-
-    const day_started = "\x1b[31mDay Started\x1b[0m";
-    print("{s: >35}", .{day_started});
-
-    const status_bar = "\x1b[31mStatus Bar\x1b[0m";
-    print("{s: >35}", .{status_bar});
-
+    print(
+        "\x1b[31m{s: <10}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}\x1b[0m",
+        .{
+            "Goals:",
+            "Priority Type:",
+            "Current Page:",
+            "Time Spent Today:",
+            "Last Day Worked:",
+            "Days Since Last:",
+            "Day Started:",
+            "Status Bar:",
+        },
+    );
     print("\n", .{});
 
     for (goals) |g| {
-        const goal_truncated = truncate(g.goal, 25);
-        const priority_truncated = g.priority_type;
-        const current_pg = g.current_page;
-        const time_spent = g.time_spent_today;
-        const last_date = g.last_date_worked;
-        const days_since = g.days_since_last;
-        const day_start = g.day_started;
-        const stus_bar = g.status_bar;
-
-        print("{s: <30}", .{goal_truncated});
-        print("{s: <30}", .{priority_truncated});
-        print("{s: <25}", .{current_pg});
-        print("{s: <25}", .{time_spent});
-        print("{s: <25}", .{last_date});
-        print("{s: <25}", .{days_since});
-        print("{s: <25}", .{day_start});
-        print("{s: <25}", .{stus_bar});
+        print(
+            "{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}",
+            .{
+                truncate(g.goal, 15),
+                g.priority_type,
+                g.current_page,
+                g.time_spent_today,
+                g.last_date_worked,
+                g.days_since_last,
+                g.day_started,
+                g.status_bar,
+            },
+        );
         print("\n", .{});
     }
-
 }
 
 fn truncate(s: []const u8, max_len: usize) []const u8 {
