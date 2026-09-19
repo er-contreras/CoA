@@ -114,20 +114,14 @@ pub fn main(init: std.process.Init) !void {
 
     var boolean = true;
     while (boolean) {
-        const clear_screen_and_reset_cursor_to_top_left = "\x1b[2J\x1b[H";
-        const enter_alt_buffer = "\x1b[?1049h";
-        const welcome: []const u8 = "Welcome erick to Course of Action\n";
-        const machine_architecture = std.posix.uname().machine;
-        const choose_options = "\x1b[36m\nChoose an Option\x1b[0m\n";
-
         print(
             "{s}{s}{s}{s}{s}",
             .{
-                clear_screen_and_reset_cursor_to_top_left,
-                enter_alt_buffer,
-                welcome,
-                machine_architecture,
-                choose_options,
+                "\x1b[2J\x1b[H",
+                "\x1b[?1049h",
+                "Welcome Erick to Course of Action\n",
+                std.posix.uname().machine,
+                "\x1b[36m\nChoose an Option\x1b[0m\n",
             }
         );
 
