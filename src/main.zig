@@ -68,14 +68,14 @@ fn printGoals() void {
     print(
         "\x1b[31m\x1b[1m\x1b[4m{s: <10}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}\x1b\x1b\x1b[0m",
         .{
-            "Goals:",
-            "Priority Type:",
-            "Current Page:",
-            "Time Spent Today:",
-            "Last Day Worked:",
-            "Days Since Last:",
-            "Day Started:",
-            "Status Bar:",
+            "Goals",
+            "Priority Type",
+            "Current Page",
+            "Time Spent Today",
+            "Last Day Worked",
+            "Days Since Last",
+            "Day Started",
+            "Status Bar",
         },
     );
     print("\n", .{});
