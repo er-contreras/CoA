@@ -114,11 +114,23 @@ pub fn main(init: std.process.Init) !void {
 
     var boolean = true;
     while (boolean) {
-        print("\x1b[2J\x1b[H", .{});
-        print("\x1b[?1049h", .{});
-        print("Welcome Erick to Course of Action\n", .{});
-        print("\x1b[36mChoose an option\x1b[0m\n", .{});
-        print("{s}\n", .{std.posix.uname().machine});
+        const clear_screen_and_reset_cursor_to_top_left = "\x1b[2J\x1b[H";
+        const enter_alt_buffer = "\x1b[?1049h";
+        const welcome: []const u8 = "Welcome erick to Course of Action\n";
+        const machine_architecture = std.posix.uname().machine;
+        const choose_options = "\x1b[36m\nChoose an Option\x1b[0m\n";
+
+        print(
+            "{s}{s}{s}{s}{s}",
+            .{
+                clear_screen_and_reset_cursor_to_top_left,
+                enter_alt_buffer,
+                welcome,
+                machine_architecture,
+                choose_options,
+            }
+        );
+
         for (options, 0..) |option, i| {
             print("{d}. {s} a task | ", .{ i + 1, option });
         }
@@ -148,5 +160,6 @@ pub fn main(init: std.process.Init) !void {
             }
         }
     }
+    // End alt buffer
     print("\x1b[?1049l", .{});
 }
