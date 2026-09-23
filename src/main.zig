@@ -36,19 +36,6 @@ fn createGoal(
     };
 }
 
-const goals = [_]Goal{
-    createGoal("Meditation", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
-    createGoal("Zig project", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[43m           \x1b[0m"),
-    createGoal("Computer Systems a Programmer Perspective", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[41m           \x1b[0m"),
-    createGoal("Think in Systems by Danna", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
-    createGoal("CLRS", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
-    createGoal("AI Engineering by Chip Huyen", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
-    createGoal("Network Programming with C by Lewis Van Winckle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[43m           \x1b[0m"),
-    createGoal("Design Data Intensive Application", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[41m           \x1b[0m"),
-    createGoal("Apply for Jobs", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
-    createGoal("Bycle", "Highest", "-", "50mins", "09/09/2026", "0", "28/08/2026", "\x1b[42m           \x1b[0m"),
-};
-
 fn getTerminalWidth() u16 {
     var ws: std.posix.winsize = undefined;
     const stdout_fd = std.Io.File.stdout().handle;
@@ -62,7 +49,18 @@ fn getTerminalWidth() u16 {
     return 80;
 }
 
-fn printGoals() void {
+fn printGoals(io: std.Io, allocator: std.mem.Allocator) !void {
+    const max_bytes = 10 * 1024 * 1024; //10KB limit
+    const file_contents = try std.Io.Dir.cwd().readFileAlloc(io, "src/data.json", allocator, .limited(max_bytes));
+    defer allocator.free(file_contents);
+
+    const parsed = try std.json.parseFromSlice([]Goal, allocator, file_contents, .{
+        .ignore_unknown_fields = true,
+    });
+    defer parsed.deinit();
+
+    const goals = parsed.value;
+
     print("\n", .{});
 
     print(
@@ -107,6 +105,12 @@ fn truncate(s: []const u8, max_len: usize) []const u8 {
 }
 
 pub fn main(init: std.process.Init) !void {
+    const io = init.io;
+
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer _ = arena.deinit();
+    const allocator = arena.allocator();
+
     const stdin_file = std.Io.File.stdin();
     var input_buffer: [1024]u8 = undefined;
     var file_reader = stdin_file.reader(init.io, &input_buffer);
@@ -131,7 +135,9 @@ pub fn main(init: std.process.Init) !void {
 
         print("\n", .{});
 
-        printGoals();
+        printGoals(io, allocator) catch |err| {
+            print("Failed with allocator: {}\n", .{err});
+        };
 
         if (try reader.takeDelimiter('\n')) |line| {
             const number: u8 = std.fmt.parseInt(u8, line, 10) catch |err| switch (err) {
