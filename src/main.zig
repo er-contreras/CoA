@@ -1,108 +1,9 @@
 const std = @import("std");
 const print = std.debug.print;
 
+const print_goals = @import("print_goals.zig");
+
 const options = [_][]const u8{ "Add", "Remove", "Update", "Exit" };
-
-const Goal = struct {
-    goal: []const u8,
-    priority_type: []const u8,
-    current_page: []const u8,
-    time_spent_today: []const u8,
-    last_date_worked: []const u8,
-    days_since_last: []const u8,
-    day_started: []const u8,
-    status_bar: []const u8,
-};
-
-fn createGoal(
-    goal: []const u8,
-    priority_type: []const u8,
-    current_page: []const u8,
-    time_spent_today: []const u8,
-    last_date_worked: []const u8,
-    days_since_last: []const u8,
-    day_started: []const u8,
-    status_bar: []const u8,
-) Goal {
-    return .{
-        .goal = goal,
-        .priority_type = priority_type,
-        .current_page = current_page,
-        .time_spent_today = time_spent_today,
-        .last_date_worked = last_date_worked,
-        .days_since_last = days_since_last,
-        .day_started = day_started,
-        .status_bar = status_bar,
-    };
-}
-
-fn getTerminalWidth() u16 {
-    var ws: std.posix.winsize = undefined;
-    const stdout_fd = std.Io.File.stdout().handle;
-
-    const err = std.posix.system.ioctl(stdout_fd, std.posix.T.IOCGWINSZ, @intFromPtr(&ws));
-
-    if (err == 0 and ws.col > 0) {
-        return ws.col;
-    }
-
-    return 80;
-}
-
-fn printGoals(io: std.Io, allocator: std.mem.Allocator) !void {
-    const max_bytes = 10 * 1024 * 1024; //10KB limit
-    const file_contents = try std.Io.Dir.cwd().readFileAlloc(io, "src/data.json", allocator, .limited(max_bytes));
-    defer allocator.free(file_contents);
-
-    const parsed = try std.json.parseFromSlice([]Goal, allocator, file_contents, .{
-        .ignore_unknown_fields = true,
-    });
-    defer parsed.deinit();
-
-    const goals = parsed.value;
-
-    print("\n", .{});
-
-    print(
-        "\x1b[31m\x1b[1m\x1b[4m{s: <10}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}{s: >20}\x1b\x1b\x1b[0m",
-        .{
-            "Goals",
-            "Priority Type",
-            "Current Page",
-            "Time Spent Today",
-            "Last Day Worked",
-            "Days Since Last",
-            "Day Started",
-            "Status Bar",
-        },
-    );
-    print("\n", .{});
-
-    for (goals) |g| {
-        print(
-            "{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}{s: <20}",
-            .{
-                truncate(g.goal, 15),
-                g.priority_type,
-                g.current_page,
-                g.time_spent_today,
-                g.last_date_worked,
-                g.days_since_last,
-                g.day_started,
-                g.status_bar,
-            },
-        );
-        print("\n", .{});
-    }
-}
-
-fn truncate(s: []const u8, max_len: usize) []const u8 {
-    if (s.len > max_len) {
-        return s[0..max_len];
-    } else {
-        return s;
-    }
-}
 
 pub fn main(init: std.process.Init) !void {
     const io = init.io;
@@ -132,9 +33,7 @@ pub fn main(init: std.process.Init) !void {
 
         print("\n", .{});
 
-        printGoals(io, allocator) catch |err| {
-            print("Failed with allocator: {}\n", .{err});
-        };
+        try print_goals.printGoals(io, allocator);
 
         if (try reader.takeDelimiter('\n')) |line| {
             const number: u8 = std.fmt.parseInt(u8, line, 10) catch |err| switch (err) {
